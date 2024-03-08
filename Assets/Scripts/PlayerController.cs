@@ -16,12 +16,17 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI countText;
 
     private int count;
+
+
     void Start()
     {
+
         rb = GetComponent <Rigidbody>();
         count = 0;    
         SetCountText();
     }
+
+
 
    void OnMove (InputValue movementValue)
    {
@@ -33,8 +38,8 @@ public class PlayerController : MonoBehaviour
 
    private void FixedUpdate()
    {
-        Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
-        rb.AddForce(movement*speed);
+        transform.position += transform.forward*movementY*speed/100f;
+        transform.position += transform.right*movementX*speed/100f;
    }
 
     void OnTriggerEnter(Collider other) 
