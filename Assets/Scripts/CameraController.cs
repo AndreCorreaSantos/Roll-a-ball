@@ -45,5 +45,7 @@ public class CameraController : MonoBehaviour
         //rotating the player according to the camera's rotation
 
         player.transform.rotation = rotation;
+
+
     }
 }

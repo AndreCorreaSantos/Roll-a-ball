@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
-
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody rb;
     private float movementX;
     private float movementY;
 
@@ -17,44 +13,53 @@ public class PlayerController : MonoBehaviour
 
     private int count;
 
-
     void Start()
     {
-
-        rb = GetComponent <Rigidbody>();
-        count = 0;    
+        count = 0;
         SetCountText();
     }
 
-
-
-   void OnMove (InputValue movementValue)
-   {
-    
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        movementX = movementVector.x; 
-        movementY = movementVector.y; 
-   }
-
-   private void FixedUpdate()
-   {
-        transform.position += transform.forward*movementY*speed/100f;
-        transform.position += transform.right*movementX*speed/100f;
-   }
-
-    void OnTriggerEnter(Collider other) 
+    void OnMove(InputValue movementValue)
     {
-        if (other.gameObject.CompareTag("PickUp")) 
-                {
-                    other.gameObject.SetActive(false);
-                    count += 1;
-                    SetCountText();
-                }
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        movementX = movementVector.x;
+        movementY = movementVector.y;
     }
 
-   void SetCountText() 
-   {
-       countText.text =  "Count: " + count.ToString();
-   }
+    void Update()
+    {
+        Vector3 movementVector = (transform.forward * movementY + transform.right * movementX).normalized * speed * Time.deltaTime;
+        transform.position += movementVector;
 
+        // Move up with Spacebar
+        if (Keyboard.current.spaceKey.isPressed)
+        {
+            transform.position += Vector3.up * speed * Time.deltaTime;
+        }
+        // Move down with Ctrl
+        else if (Keyboard.current.ctrlKey.isPressed)
+        {
+            transform.position -= Vector3.up * speed * Time.deltaTime;
+        }
+
+        // Limit the character's absolute speed
+        float characterSpeed = Mathf.Clamp(transform.position.magnitude, 0f, speed);
+        transform.position = transform.position.normalized * characterSpeed;
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            count += 1;
+            SetCountText();
+        }
+    }
+
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+    }
 }
