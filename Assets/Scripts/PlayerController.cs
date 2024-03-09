@@ -26,26 +26,26 @@ public class PlayerController : MonoBehaviour
         movementY = movementVector.y;
     }
 
-    void Update()
+void Update()
+{
+    // Calculate movement vector based on input
+    Vector3 movementVector = (transform.forward * movementY + transform.right * movementX) * speed * Time.deltaTime;
+
+    // Move up with Spacebar
+    if (Keyboard.current.spaceKey.isPressed)
     {
-        Vector3 movementVector = (transform.forward * movementY + transform.right * movementX).normalized * speed * Time.deltaTime;
-        transform.position += movementVector;
-
-        // Move up with Spacebar
-        if (Keyboard.current.spaceKey.isPressed)
-        {
-            transform.position += Vector3.up * speed * Time.deltaTime;
-        }
-        // Move down with Ctrl
-        else if (Keyboard.current.ctrlKey.isPressed)
-        {
-            transform.position -= Vector3.up * speed * Time.deltaTime;
-        }
-
-        // Limit the character's absolute speed
-        float characterSpeed = Mathf.Clamp(transform.position.magnitude, 0f, speed);
-        transform.position = transform.position.normalized * characterSpeed;
+        movementVector += Vector3.up * speed * Time.deltaTime;
     }
+    // Move down with Ctrl
+    else if (Keyboard.current.ctrlKey.isPressed)
+    {
+        movementVector -= Vector3.up * speed * Time.deltaTime;
+    }
+
+    // Apply movement
+    transform.position += movementVector;
+}
+
 
 
     void OnTriggerEnter(Collider other)

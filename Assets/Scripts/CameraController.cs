@@ -5,16 +5,29 @@ public class CameraController : MonoBehaviour
     public float sensitivityX = 1.0f;
     public float sensitivityY = 1.0f;
     public Transform player; // Reference to the player's transform
-    public float distanceFromPlayer = 10.0f; // Distance between camera and player
+    public Transform cameraPos; // Reference to the camera position and rotation relative to the player
     public float minYAngle = -90f; // Minimum angle for looking down
     public float maxYAngle = 90f; // Maximum angle for looking up
 
     float currentXRotation = 0f;
+    Vector3 cameraOffset;
+    Quaternion cameraRotationOffset;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Calculate the constant offset between player and cameraPos
+        if (player != null && cameraPos != null)
+        {
+            cameraOffset = cameraPos.position - player.position;
+            cameraRotationOffset = Quaternion.Inverse(player.rotation) * cameraPos.rotation;
+        }
+        else
+        {
+            Debug.LogError("Player or cameraPos transform is not assigned!");
+        }
     }
 
     void LateUpdate()
@@ -33,19 +46,14 @@ public class CameraController : MonoBehaviour
         // Calculate rotation based on currentXRotation and player's rotation
         Quaternion rotation = Quaternion.Euler(currentXRotation, player.eulerAngles.y, 0);
 
-        // Calculate position based on rotation and distance from player
-        Vector3 negDistance = new Vector3(0.0f, 0.0f, -distanceFromPlayer);
-        Vector3 position = rotation * negDistance + player.position;
+        // Calculate position based on rotation and constant offset
+        Vector3 position = player.position + rotation * cameraOffset;
 
         // Set camera position and rotation
-        transform.rotation = rotation;
+        transform.rotation = rotation * cameraRotationOffset;
         transform.position = position;
 
-
-        //rotating the player according to the camera's rotation
-
+        // Rotate the player according to the camera's rotation
         player.transform.rotation = rotation;
-
-
     }
 }

@@ -36,9 +36,9 @@ public class SceneController : MonoBehaviour
         _boids.Add(boidController);
         if (boidController != null)
         {
-            boidController.Speed = 5.0f; // Set Speed to a random value within a specified range
+            boidController.Speed = 5.0f;
             boidController.SteeringSpeed = 100f;
-            boidController.NoClumpingRadius = 5f;
+            boidController.NoClumpingRadius = 2f;
             boidController.LocalAreaRadius = 10f;
         }
     }

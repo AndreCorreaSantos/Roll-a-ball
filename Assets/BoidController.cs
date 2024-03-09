@@ -18,8 +18,10 @@ public class BoidController : MonoBehaviour
         // Separation vars
         Vector3 separationDirection = Vector3.zero;
         Vector3 alignmentDirection = Vector3.zero;
+        Vector3 cohesionDirection = Vector3.zero;
         int separationCount = 0;
         int alignmentCount = 0;
+        int cohesionCount = 0;
 
         foreach (BoidController boid in other)
         {
@@ -41,6 +43,11 @@ public class BoidController : MonoBehaviour
                 alignmentDirection += boid.transform.forward;
                 alignmentCount++;
             }
+            if (distance < LocalAreaRadius)
+            {
+                cohesionDirection += boid.transform.position - transform.position;
+                cohesionCount++;
+            }
         }
 
         // Calculate average separation direction
@@ -51,7 +58,9 @@ public class BoidController : MonoBehaviour
         separationDirection = -separationDirection.normalized;
 
         // Apply to steering
-        steering += separationDirection+alignmentDirection;
+        steering += separationDirection.normalized * 0.5f;
+        steering += alignmentDirection.normalized * 0.34f;
+        steering += cohesionDirection.normalized * 0.16f;
         
 
         // Apply steering
