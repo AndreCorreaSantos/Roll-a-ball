@@ -158,8 +158,9 @@ MonoBehaviour:
   computeShader: {fileID: 7200000, guid: 8578c5aa722c2ca4ea71d8a55cb18a0b, type: 3}
   playerPos: {fileID: 254305374}
   separation: 0.4
-  alignment: 0.2
-  target: 1
+  alignment: 0.15
+  target: -0.2
+  cohesion: 0.7
 --- !u!4 &110180617
 Transform:
   m_ObjectHideFlags: 0

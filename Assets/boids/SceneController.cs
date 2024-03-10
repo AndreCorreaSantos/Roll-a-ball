@@ -25,6 +25,8 @@ public class SceneController : MonoBehaviour
 
     public float target = 0.5f;
 
+    public float cohesion = 0.5f;
+
 
     struct BoidInfo
     {
@@ -52,6 +54,7 @@ public class SceneController : MonoBehaviour
             if (inputBuffer != null) {
                 inputBuffer.Release();
             }
+            Debug.Log("New input Buffer");
             inputBuffer = new ComputeBuffer(_boids.Count, boidInfoSize);
         }
 
@@ -63,9 +66,10 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("separationWeight", separation);
         computeShader.SetFloat("alignmentWeight", alignment);
         computeShader.SetFloat("targetWeight", target);
+        computeShader.SetFloat("cohesionWeight",cohesion);
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
-        computeShader.SetFloat("moveSpeed", 10.0f);
+        computeShader.SetFloat("moveSpeed", 20.0f);
         computeShader.SetBuffer(0, "inputBuffer", inputBuffer);
 
         // Adjust dispatch call to ensure all boids are processed

@@ -22,24 +22,26 @@ float3 targetPosition;
 half separationWeight;
 half alignmentWeight;
 half targetWeight;
+half cohesionWeight;
 half moveSpeed;
 
-[numthreads(8,1,1)]
+[numthreads(64,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
 
     uint boidIndex = id.x;
     BoidInfo boidSelf = inputBuffer[boidIndex];
-    float3 cellAlignment, cellSeparation;
+    float3 cellAlignment, cellSeparation, cellCenter;
 
     for (uint i = 0; i < numBoids; ++i)
     {
         if (i == boidIndex) continue; // Skip the current boid
     
         BoidInfo boidOther = inputBuffer[i];
-        cellAlignment += boidOther.forward;
         float3 distance = boidOther.position - boidSelf.position;
         cellSeparation += distance; // This should possibly be calculated differently to reflect actual separation behavior
+        cellAlignment += boidOther.forward;
+        cellCenter += boidOther.position;
     }
 
     const float3 alignmentResult = alignmentWeight *
@@ -51,7 +53,9 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     const float3 targetHeading = targetWeight
         * normalizeSafe(targetPosition - boidSelf.position); // run from target
 
-    const float3 normalHeading = normalizeSafe(alignmentResult + separationResult + targetHeading);
+    const float3 cohesionResult = cohesionWeight *normalizeSafe((cellCenter / numBoids) - boidSelf.position);
+
+    const float3 normalHeading = normalizeSafe(alignmentResult + separationResult + cohesionResult + targetHeading);
 
     const float3 nextHeading = normalizeSafe(boidSelf.forward + deltaTime * (normalHeading - boidSelf.forward));
 
