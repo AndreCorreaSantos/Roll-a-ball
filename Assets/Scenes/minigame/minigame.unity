@@ -154,7 +154,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: -7661370929929176078, guid: 4264428acf221b44199befad13142c06,
     type: 3}
-  spawnBoids: 100
+  spawnBoids: 1000
+  computeShader: {fileID: 7200000, guid: 8578c5aa722c2ca4ea71d8a55cb18a0b, type: 3}
+  playerPos: {fileID: 254305374}
+  separation: 0.4
+  alignment: 0.2
+  target: 1
 --- !u!4 &110180617
 Transform:
   m_ObjectHideFlags: 0
