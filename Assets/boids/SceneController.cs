@@ -61,15 +61,19 @@ public class SceneController : MonoBehaviour
         inputBuffer.SetData(_boidInfos);
 
         // Setting shader properties
+        float timeConstant = 2f;
+        float speed = 2.5f*timeConstant;
+        float time = Time.deltaTime*timeConstant;
         computeShader.SetInt("numBoids", _boids.Count);
-        computeShader.SetFloat("deltaTime", Time.deltaTime/2f);
+        computeShader.SetFloat("deltaTime", time);
         computeShader.SetFloat("separationWeight", separation);
         computeShader.SetFloat("alignmentWeight", alignment);
         computeShader.SetFloat("targetWeight", target);
         computeShader.SetFloat("cohesionWeight",cohesion);
+        computeShader.SetFloat("noClumpingRadius",1.5f);
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
-        computeShader.SetFloat("moveSpeed", 20.0f);
+        computeShader.SetFloat("moveSpeed", speed);
         computeShader.SetBuffer(0, "inputBuffer", inputBuffer);
 
         // Adjust dispatch call to ensure all boids are processed

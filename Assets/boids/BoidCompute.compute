@@ -24,6 +24,7 @@ half alignmentWeight;
 half targetWeight;
 half cohesionWeight;
 half moveSpeed;
+half noClumpingRadius;
 
 [numthreads(64,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
@@ -44,24 +45,24 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         cellCenter += boidOther.position;
     }
 
-    const float3 alignmentResult = alignmentWeight *
+    const float3 alignmentDirection = alignmentWeight *
         normalizeSafe((cellAlignment / numBoids) - boidSelf.forward);
 
-    const float3 separationResult = separationWeight *
+    const float3 separationDirection = separationWeight *
         normalizeSafe((boidSelf.position / numBoids) - cellSeparation);
 
-    const float3 targetHeading = targetWeight
-        * normalizeSafe(targetPosition - boidSelf.position); // run from target
+    const float3 targetDirection = targetWeight
+        * normalizeSafe(targetPosition - boidSelf.position); // run from player target
 
-    const float3 cohesionResult = cohesionWeight *normalizeSafe((cellCenter / numBoids) - boidSelf.position);
+    const float3 cohesionDirection = cohesionWeight *normalizeSafe((cellCenter / numBoids) - boidSelf.position);
 
-    const float3 normalHeading = normalizeSafe(alignmentResult + separationResult + cohesionResult + targetHeading);
+    const float3 normalDirection = normalizeSafe(alignmentDirection + separationDirection + cohesionDirection + targetDirection);
 
-    const float3 nextHeading = normalizeSafe(boidSelf.forward + deltaTime * (normalHeading - boidSelf.forward));
+    const float3 nextDirection = normalizeSafe(boidSelf.forward + deltaTime * (normalDirection - boidSelf.forward));
 
     // Update Boid
-    boidSelf.position = boidSelf.position + (nextHeading * moveSpeed * deltaTime);
-    boidSelf.forward = nextHeading;
+    boidSelf.position = boidSelf.position + (nextDirection * moveSpeed * deltaTime);
+    boidSelf.forward = nextDirection;
     inputBuffer[boidIndex] = boidSelf;
 
 }

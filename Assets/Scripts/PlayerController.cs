@@ -13,6 +13,10 @@ public class PlayerController : MonoBehaviour
 
     private int count;
 
+    public AudioSource source;
+
+    public AudioClip eating;
+
     void Start()
     {
         count = 0;
@@ -56,6 +60,8 @@ void Update()
             other.gameObject.SetActive(false);
             count += 1;
             SetCountText();
+            source.PlayOneShot(eating);
+
         }
     }
 
