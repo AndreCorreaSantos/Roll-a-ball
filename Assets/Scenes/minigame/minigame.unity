@@ -157,10 +157,11 @@ MonoBehaviour:
   spawnBoids: 1000
   computeShader: {fileID: 7200000, guid: 8578c5aa722c2ca4ea71d8a55cb18a0b, type: 3}
   playerPos: {fileID: 254305374}
-  separation: 0.4
+  separation: 1
   alignment: 0.12
   target: -0.5
-  cohesion: 0.5
+  cohesion: 0.3
+  noClumpingRadius: 3
 --- !u!4 &110180617
 Transform:
   m_ObjectHideFlags: 0
@@ -1179,7 +1180,7 @@ Terrain:
   m_StaticShadowCaster: 0
   m_IgnoreQualitySettings: 0
   m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
+  m_MaterialTemplate: {fileID: 2100000, guid: d6db277f5624173418cb46a2f7109988, type: 2}
   m_BakeLightProbesForTrees: 1
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
@@ -1201,7 +1202,7 @@ Transform:
   m_GameObject: {fileID: 1558528756}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -129, y: -50, z: -128}
+  m_LocalPosition: {x: -256, y: -50, z: -256}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1220,9 +1221,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   depth: 20
-  width: 256
-  height: 256
+  width: 512
+  height: 512
   scale: 20
+  steepness: -40
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

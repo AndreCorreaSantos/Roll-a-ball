@@ -60,7 +60,7 @@ void Update()
             other.gameObject.SetActive(false);
             count += 1;
             SetCountText();
-            source.PlayOneShot(eating);
+            source.PlayOneShot(eating,0.01f);
 
         }
     }

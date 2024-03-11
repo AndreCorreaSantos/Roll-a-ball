@@ -27,6 +27,8 @@ public class SceneController : MonoBehaviour
 
     public float cohesion = 0.5f;
 
+    public float noClumpingRadius = 0.5f;
+
 
     struct BoidInfo
     {
@@ -70,7 +72,7 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("alignmentWeight", alignment);
         computeShader.SetFloat("targetWeight", target);
         computeShader.SetFloat("cohesionWeight",cohesion);
-        computeShader.SetFloat("noClumpingRadius",1.5f);
+        computeShader.SetFloat("noClumpingRadius",noClumpingRadius);
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
         computeShader.SetFloat("moveSpeed", speed);

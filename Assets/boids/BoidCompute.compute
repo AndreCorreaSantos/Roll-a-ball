@@ -1,8 +1,4 @@
-// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
-
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
 
 struct BoidInfo
 {
@@ -12,7 +8,7 @@ struct BoidInfo
 
 float3 normalizeSafe(float3 v)
 {
-    return length(v) > 0 ? normalize(v) : 0;
+    return length(v) > 0 ? normalize(v) : float3(0, 0, 0);
 }
 
 RWStructuredBuffer<BoidInfo> inputBuffer;
@@ -29,10 +25,13 @@ half noClumpingRadius;
 [numthreads(64,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-
     uint boidIndex = id.x;
     BoidInfo boidSelf = inputBuffer[boidIndex];
-    float3 cellAlignment, cellSeparation, cellCenter;
+    float3 cellAlignment = float3(0, 0, 0);
+    float3 cellCenter = float3(0, 0, 0);
+    float3 cellSeparation = float3(0, 0, 0);
+    int boidsInClumpingRadius = 0;
+    int boidsCountForAlignmentAndCohesion = 0;
 
     for (uint i = 0; i < numBoids; ++i)
     {
@@ -40,29 +39,37 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     
         BoidInfo boidOther = inputBuffer[i];
         float3 distance = boidOther.position - boidSelf.position;
-        cellSeparation += distance; // This should possibly be calculated differently to reflect actual separation behavior
+
+        // Correcting the logic for separation
+        if (length(distance) < noClumpingRadius)
+        {
+            cellSeparation += (boidSelf.position - boidOther.position);
+            boidsInClumpingRadius++;
+        }
+
         cellAlignment += boidOther.forward;
         cellCenter += boidOther.position;
+        boidsCountForAlignmentAndCohesion++;
     }
 
-    const float3 alignmentDirection = alignmentWeight *
-        normalizeSafe((cellAlignment / numBoids) - boidSelf.forward);
+    cellAlignment = boidsCountForAlignmentAndCohesion > 0 ? cellAlignment / boidsCountForAlignmentAndCohesion : float3(0, 0, 0);
+    cellCenter = boidsCountForAlignmentAndCohesion > 0 ? cellCenter / boidsCountForAlignmentAndCohesion : float3(0, 0, 0);
 
-    const float3 separationDirection = separationWeight *
-        normalizeSafe((boidSelf.position / numBoids) - cellSeparation);
+    if (boidsInClumpingRadius > 0)
+    {
+        cellSeparation /= boidsInClumpingRadius;
+    }
 
-    const float3 targetDirection = targetWeight
-        * normalizeSafe(targetPosition - boidSelf.position); // run from player target
-
-    const float3 cohesionDirection = cohesionWeight *normalizeSafe((cellCenter / numBoids) - boidSelf.position);
+    const float3 alignmentDirection = alignmentWeight * normalizeSafe(cellAlignment - boidSelf.forward);
+    const float3 separationDirection = separationWeight * normalizeSafe(cellSeparation);
+    const float3 targetDirection = targetWeight * normalizeSafe(targetPosition - boidSelf.position);
+    const float3 cohesionDirection = cohesionWeight * normalizeSafe(cellCenter - boidSelf.position);
 
     const float3 normalDirection = normalizeSafe(alignmentDirection + separationDirection + cohesionDirection + targetDirection);
-
     const float3 nextDirection = normalizeSafe(boidSelf.forward + deltaTime * (normalDirection - boidSelf.forward));
 
     // Update Boid
     boidSelf.position = boidSelf.position + (nextDirection * moveSpeed * deltaTime);
     boidSelf.forward = nextDirection;
     inputBuffer[boidIndex] = boidSelf;
-
 }
