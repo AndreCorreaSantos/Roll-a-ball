@@ -29,6 +29,8 @@ public class SceneController : MonoBehaviour
 
     public float noClumpingRadius = 0.5f;
 
+    public float targetRadius = 5.0f;
+
 
     struct BoidInfo
     {
@@ -73,14 +75,13 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("targetWeight", target);
         computeShader.SetFloat("cohesionWeight",cohesion);
         computeShader.SetFloat("noClumpingRadius",noClumpingRadius);
+        computeShader.SetFloat("targetRadius",targetRadius);
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
         computeShader.SetFloat("moveSpeed", speed);
         computeShader.SetBuffer(0, "inputBuffer", inputBuffer);
 
-        // Adjust dispatch call to ensure all boids are processed
-        int threadGroupsX = (_boids.Count + 7) / 8; // Ensure we have enough groups to cover all boids
-        computeShader.Dispatch(0,threadGroupsX, 1, 1);
+        computeShader.Dispatch(0,1, 1, 1);
 
         inputBuffer.GetData(_boidInfos);
 
