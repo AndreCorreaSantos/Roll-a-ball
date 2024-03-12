@@ -21,9 +21,10 @@ half targetWeight;
 half cohesionWeight;
 half moveSpeed;
 half noClumpingRadius;
+half cohesionRadius;
 half targetRadius; // New parameter for target avoidance radius
 
-[numthreads(256,1,1)]
+[numthreads(512,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     uint boidIndex = id.x;
@@ -36,18 +37,18 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
     for (uint i = 0; i < numBoids; ++i)
     {
-        if (i == boidIndex) continue; // Skip the current boid
+        if (i == boidIndex) continue; 
     
         BoidInfo boidOther = inputBuffer[i];
         float3 distance = boidOther.position - boidSelf.position;
 
-        // Correcting the logic for separation
         if (length(distance) < noClumpingRadius)
         {
             cellSeparation += (boidSelf.position - boidOther.position);
             boidsInClumpingRadius++;
         }
 
+        if (length(distance) > cohesionRadius) continue; // cohesion radius used for alginment and cohesion
         cellAlignment += boidOther.forward;
         cellCenter += boidOther.position;
         boidsCountForAlignmentAndCohesion++;

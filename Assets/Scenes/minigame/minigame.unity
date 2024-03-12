@@ -154,15 +154,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: -7661370929929176078, guid: 4264428acf221b44199befad13142c06,
     type: 3}
-  spawnBoids: 256
+  spawnBoids: 2048
   computeShader: {fileID: 7200000, guid: 8578c5aa722c2ca4ea71d8a55cb18a0b, type: 3}
   playerPos: {fileID: 254305374}
   separation: 1
-  alignment: 0.34
+  alignment: 0.2
   target: 0.5
   cohesion: 0.8
   noClumpingRadius: 1
+  cohesionRadius: 20
   targetRadius: 15
+  spawnRadius: 100
 --- !u!4 &110180617
 Transform:
   m_ObjectHideFlags: 0
@@ -1546,7 +1548,7 @@ Transform:
   m_GameObject: {fileID: 1558528756}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -256, y: -50, z: -256}
+  m_LocalPosition: {x: -128, y: -50, z: -128}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1565,8 +1567,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   depth: 20
-  width: 512
-  height: 512
+  width: 256
+  height: 256
   scale: 20
   steepness: -40
 --- !u!1660057539 &9223372036854775807

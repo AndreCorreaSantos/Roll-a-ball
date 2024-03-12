@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+[ExecuteInEditMode] // inspirado por https://www.youtube.com/watch?v=vFvwyu_ZKfU&t=402s&ab_channel=Brackeys
 public class TerrainGenerator : MonoBehaviour
 {
     public int depth = 20;

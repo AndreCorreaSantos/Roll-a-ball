@@ -29,8 +29,10 @@ public class SceneController : MonoBehaviour
 
     public float noClumpingRadius = 0.5f;
 
+    public float cohesionRadius = 5.0f;
     public float targetRadius = 5.0f;
 
+    public int spawnRadius = 100;
 
     struct BoidInfo
     {
@@ -75,13 +77,14 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("targetWeight", target);
         computeShader.SetFloat("cohesionWeight",cohesion);
         computeShader.SetFloat("noClumpingRadius",noClumpingRadius);
+        computeShader.SetFloat("cohesionRadius",cohesionRadius);
         computeShader.SetFloat("targetRadius",targetRadius);
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
         computeShader.SetFloat("moveSpeed", speed);
         computeShader.SetBuffer(0, "inputBuffer", inputBuffer);
 
-        computeShader.Dispatch(0,1, 1, 1);
+        computeShader.Dispatch(0,8, 1, 1);
 
         inputBuffer.GetData(_boidInfos);
 
@@ -97,7 +100,7 @@ public class SceneController : MonoBehaviour
     private void SpawnBoid(GameObject prefab, int swarmIndex)
     {
         var boidInstance = Instantiate(prefab);
-        Vector3 startPos = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
+        Vector3 startPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius));
         boidInstance.transform.position = startPos;
         BoidController boidController = boidInstance.GetComponent<BoidController>();
         _boids.Add(boidController);
