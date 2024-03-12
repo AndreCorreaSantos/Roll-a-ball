@@ -34,6 +34,12 @@ public class SceneController : MonoBehaviour
 
     public int spawnRadius = 100;
 
+    public float boxSizeY = 25f;
+
+    public float boxSizeX = 128f;
+
+    public float boxSizeZ = 128f;
+
     struct BoidInfo
     {
         public Vector3 position;
@@ -47,6 +53,8 @@ public class SceneController : MonoBehaviour
         for (int i = 0; i < spawnBoids; i++) {
             SpawnBoid(boidPrefab.gameObject, i);
         }
+
+
     }
 
     private void Update() {
@@ -79,6 +87,10 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("noClumpingRadius",noClumpingRadius);
         computeShader.SetFloat("cohesionRadius",cohesionRadius);
         computeShader.SetFloat("targetRadius",targetRadius);
+        computeShader.SetFloat("boxSizeX",boxSizeX);
+        computeShader.SetFloat("boxSizeY",boxSizeY);
+        computeShader.SetFloat("boxSizeZ",boxSizeZ);
+
         float[] playerPosArr = new float[3] { playerPos.position.x, playerPos.position.y, playerPos.position.z };
         computeShader.SetFloats("targetPosition", playerPosArr );
         computeShader.SetFloat("moveSpeed", speed);
@@ -92,6 +104,8 @@ public class SceneController : MonoBehaviour
         for (int i = 0; i < _boids.Count; i++) {
             var boid = _boids[i];
             var info = _boidInfos[i];
+
+            // Update boid position
             boid.transform.position = info.position;
             boid.transform.forward = info.forward;
         }

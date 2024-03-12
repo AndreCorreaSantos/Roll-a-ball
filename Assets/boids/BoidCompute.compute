@@ -1,3 +1,5 @@
+//Code Based On:
+
 #pragma kernel CSMain
 
 struct BoidInfo
@@ -11,6 +13,8 @@ float3 normalizeSafe(float3 v)
     return length(v) > 0 ? normalize(v) : float3(0, 0, 0);
 }
 
+
+
 RWStructuredBuffer<BoidInfo> inputBuffer;
 uint numBoids;
 float deltaTime;
@@ -23,6 +27,35 @@ half moveSpeed;
 half noClumpingRadius;
 half cohesionRadius;
 half targetRadius; // New parameter for target avoidance radius
+
+// bounding box parameters
+
+float3 checkPosition(float3 position){
+
+    float boxSizeX = 64.0f;
+    float boxSizeY = 20.0f;
+    float boxSizeZ = 64.0f;
+
+    
+    float3 newPosition = position;
+    // Check if out of bounds
+    if (position.x <= -boxSizeX) {
+        newPosition.x = boxSizeX ;  // Transport to the opposite wall
+    } if (position.x > boxSizeX) {
+        newPosition.x = -boxSizeX;
+    }
+    if (position.y <= -boxSizeY) {
+        newPosition.y = boxSizeY ;  // Transport to the opposite wall
+    } if (position.y > boxSizeY) {
+        newPosition.y = -boxSizeY;
+    }
+    if (position.z <= -boxSizeZ) {
+        newPosition.z = boxSizeZ ;  // Transport to the opposite wall
+    } if (position.z > boxSizeZ) {
+        newPosition.z = -boxSizeZ;
+    }
+    return newPosition;
+}
 
 [numthreads(512,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
@@ -78,7 +111,8 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     const float3 nextDirection = normalizeSafe(boidSelf.forward + deltaTime * (normalDirection - boidSelf.forward));
 
     // Update Boid
-    boidSelf.position = boidSelf.position + (nextDirection * moveSpeed * deltaTime);
+    boidSelf.position = checkPosition(boidSelf.position + (nextDirection * moveSpeed * deltaTime));
     boidSelf.forward = nextDirection;
     inputBuffer[boidIndex] = boidSelf;
 }
+
