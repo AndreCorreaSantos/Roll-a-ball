@@ -96,7 +96,6 @@ public class PlayerController : MonoBehaviour
             if (health < 10f)
             {
                 transform.localScale += new Vector3(0.1f,0.1f,0.1f);
-                cameraPos.localPosition += cameraStartPos*100;
                 health += 0.5f;
             }
         }

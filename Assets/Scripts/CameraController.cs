@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(currentXRotation, player.eulerAngles.y, 0);
 
         // Calculate position based on rotation and constant offset
-        Vector3 position = player.position + rotation * cameraOffset;
+        Vector3 position = player.position + rotation * cameraOffset*player.localScale.x;
 
         // Set camera position and rotation
         transform.rotation = rotation * cameraRotationOffset;
