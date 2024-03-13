@@ -57,7 +57,7 @@ float3 checkPosition(float3 position){
     return newPosition;
 }
 
-[numthreads(512,1,1)]
+[numthreads(32,1,1)] // mudar para 16,16,1
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     uint boidIndex = id.x;

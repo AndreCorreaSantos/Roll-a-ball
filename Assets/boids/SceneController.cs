@@ -96,7 +96,7 @@ public class SceneController : MonoBehaviour
         computeShader.SetFloat("moveSpeed", speed);
         computeShader.SetBuffer(0, "inputBuffer", inputBuffer);
 
-        computeShader.Dispatch(0,8, 1, 1);
+        computeShader.Dispatch(0,_boids.Count/32, 1, 1);
 
         inputBuffer.GetData(_boidInfos);
 
