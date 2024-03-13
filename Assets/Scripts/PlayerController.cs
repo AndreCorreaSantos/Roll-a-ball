@@ -22,11 +22,16 @@ public class PlayerController : MonoBehaviour
 
     private float eatTimer = 0;
 
+    public Transform cameraPos;
+
+    private Vector3 cameraStartPos;
+
     void Start()
     {
         count = 0;
         SetCountText();
         hitSource.playOnAwake = false; 
+        cameraStartPos = cameraPos.localPosition;
     }
 
    void OnMove(InputValue movementValue)
@@ -90,6 +95,8 @@ public class PlayerController : MonoBehaviour
             eatTimer = 1.5f;
             if (health < 10f)
             {
+                transform.localScale += new Vector3(0.1f,0.1f,0.1f);
+                cameraPos.localPosition += cameraStartPos*100;
                 health += 0.5f;
             }
         }
