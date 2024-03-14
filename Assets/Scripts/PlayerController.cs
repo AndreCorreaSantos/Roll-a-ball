@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -58,8 +59,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("You died!");
-            // go to menu
+            SceneManager.LoadScene("MainMenu");
              
         }
 
