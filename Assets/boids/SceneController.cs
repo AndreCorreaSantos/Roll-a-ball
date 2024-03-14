@@ -48,7 +48,7 @@ public class SceneController : MonoBehaviour
 
     private void Start() {
         _boids = new List<BoidController>();
-        _boidInfos = new BoidInfo[spawnBoids]; // Corrected initialization
+        _boidInfos = new BoidInfo[spawnBoids]; 
 
         for (int i = 0; i < spawnBoids; i++) {
             SpawnBoid(boidPrefab.gameObject, i);
@@ -117,6 +117,8 @@ public class SceneController : MonoBehaviour
         Vector3 startPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius));
         boidInstance.transform.position = startPos;
         BoidController boidController = boidInstance.GetComponent<BoidController>();
+        boidController.edible = 1;
+        
         _boids.Add(boidController);
 
 
