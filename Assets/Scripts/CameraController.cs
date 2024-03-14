@@ -1,4 +1,5 @@
 using UnityEngine;
+// using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
@@ -47,11 +48,11 @@ public class CameraController : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(currentXRotation, player.eulerAngles.y, 0);
 
         // Calculate position based on rotation and constant offset
-        Vector3 position = player.position + rotation * cameraOffset*player.localScale.x;
+        Vector3 targetPosition = player.position + rotation * cameraOffset*player.localScale.x; // 
 
         // Set camera position and rotation
         transform.rotation = rotation * cameraRotationOffset;
-        transform.position = position;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, 0.25f); // SUGESTAO DO ARIEL USAR LERP AQUI
 
         // Rotate the player according to the camera's rotation
         player.transform.rotation = rotation;
