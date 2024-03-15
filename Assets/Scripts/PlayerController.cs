@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     public float speedBar = 0f;
 
+    public float maxHealth = 50f;
+
     private float speedBoostTimer = 0;
 
     public Transform cameraPos;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         SetCountText();
         hitSource.playOnAwake = false; 
         cameraStartPos = cameraPos.localPosition;
+        health = maxHealth;
     }
 
    void OnMove(InputValue movementValue)
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HealthBar.value = health/10f;
+        HealthBar.value = health/maxHealth;
         SpeedBar.value = speedBar/10f;
         speed = 20f;
         if (speedBoostTimer > 0)
@@ -122,7 +125,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (edible == 1 && speedBar < 10f)
             {
-                speedBar += 1.5f;//
+                speedBar += 7.5f;//
             }
         }
     }
