@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,82 +15,75 @@ public class PlayerController : MonoBehaviour
     public AudioClip eating;
 
     public Slider HealthBar;
-
     public Slider SpeedBar;
     private float timeSinceLastEat = 0f; 
     public float eatEffectCooldown = 0.4f; 
 
     public float health = 10f;
-
     public float speedBar = 0f;
-
     public float maxHealth = 50f;
 
     private float speedBoostTimer = 0;
 
-    public Transform cameraPos;
+    private Transform playerTransform;
 
-    private Vector3 cameraStartPos;
+
+    private Rigidbody rb; // Reference to the Rigidbody component
 
     void Start()
     {
+        //get first child
+        playerTransform = transform.GetChild(0).GetComponent<Transform>();
         count = 0;
         SetCountText();
         hitSource.playOnAwake = false; 
-        cameraStartPos = cameraPos.localPosition;
         health = maxHealth;
+        rb = GetComponent<Rigidbody>(); // Get the Rigidbody component
     }
 
-   void OnMove(InputValue movementValue)
+    void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
 
+    void FixedUpdate() 
+    {
+        Vector3 forward = movementY * transform.forward;
+        Vector3 right = movementX * transform.right;
+        Vector3 movementVector = (forward+right).normalized * speed;
+        rb.velocity = movementVector;
+    }
+
     void Update()
     {
-        HealthBar.value = health/maxHealth;
-        SpeedBar.value = speedBar/10f;
-        speed = 20f;
+
+        HealthBar.value = health / maxHealth;
+        SpeedBar.value = speedBar / 10f;
+        speed = 20f + (speedBoostTimer > 0 ? 20f : 0) + (speedBar > 0 && Keyboard.current.leftShiftKey.isPressed ? 30f : 0); // Calculate speed
+
         if (speedBoostTimer > 0)
         {
             speedBoostTimer -= Time.deltaTime;
-            speed = 40f;
         }
+
         if (health > 0)
         {
             health -= Time.deltaTime;
-            
-        }else
+        }
+        else
         {
             SceneManager.LoadScene("MainMenu");
-             
         }
-        Debug.Log(speedBar);
-        if (speedBar > 0 && Keyboard.current.leftShiftKey.isPressed) //check if there is speed bar and it was pressed, shift
+
+        if (speedBar > 0 && Keyboard.current.leftShiftKey.isPressed)
         {
-            Debug.Log("SPEED");
             speedBar -= Time.deltaTime;
-            SpeedBar.value = speedBar/10f;
-            speed = 50f;
+            SpeedBar.value = speedBar / 10f;
         }
 
 
-        Vector3 movementVector = (transform.forward * movementY + transform.right * movementX) * speed * Time.deltaTime;
-
-        if (Keyboard.current.spaceKey.isPressed)
-        {
-            movementVector += Vector3.up * speed * Time.deltaTime;
-        }
-        else if (Keyboard.current.ctrlKey.isPressed)
-        {
-            movementVector -= Vector3.up * speed * Time.deltaTime;
-        }
-
-        transform.position += movementVector;
-
-        // Update the timer
         if (timeSinceLastEat < eatEffectCooldown)
         {
             timeSinceLastEat += Time.deltaTime;
@@ -115,9 +106,9 @@ public class PlayerController : MonoBehaviour
             PlayEatEffect();
             speedBoostTimer = 1.5f;
 
-            if (health < 10f && edible == 2)
+            if (health < 50f && edible == 2)
             {
-                health += 0.5f;
+                health += 5f;
             }
             else if (edible == 0)
             {
@@ -125,7 +116,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (edible == 1 && speedBar < 10f)
             {
-                speedBar += 7.5f;//
+                speedBar += 1.0f;//
             }
         }
     }
