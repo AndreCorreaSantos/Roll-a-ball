@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
         if (health > 0)
         {
-            health -= Time.deltaTime;
+            health -= Time.deltaTime/1.5f;
         }
         else
         {
@@ -118,6 +118,12 @@ public class PlayerController : MonoBehaviour
             {
                 speedBar += 1.0f;//
             }
+        }
+        Debug.Log(1);
+        if (otherObject.CompareTag("Enemy"))
+        {
+            Debug.Log(otherObject.name);
+            health -= 20f;
         }
     }
 
