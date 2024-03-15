@@ -164,8 +164,8 @@ MonoBehaviour:
   noClumpingRadius: 1
   cohesionRadius: 20
   targetRadius: 55
-  spawnRadius: 100
-  boxSizeY: 25
+  spawnRadius: 64
+  boxSizeY: 30
   boxSizeX: 128
   boxSizeZ: 128
   playerController: {fileID: 254305372}
@@ -1571,7 +1571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df1298756579df841a749ad7b0e891ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 254305374}
+  player: {fileID: 254305371}
   speed: 15
 --- !u!64 &1313531585
 MeshCollider:

@@ -117,7 +117,7 @@ public class SceneController : MonoBehaviour
     private void SpawnBoid(GameObject prefab, int swarmIndex)
     {
         var boidInstance = Instantiate(prefab);
-        Vector3 startPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius));
+        Vector3 startPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), Random.Range(20,30), Random.Range(-spawnRadius, spawnRadius));
         boidInstance.transform.position = startPos;
         BoidController boidController = boidInstance.GetComponent<BoidController>();
         //5 % chance of being unedibl
