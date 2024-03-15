@@ -163,7 +163,7 @@ MonoBehaviour:
   cohesion: 0.8
   noClumpingRadius: 1
   cohesionRadius: 20
-  targetRadius: 55
+  targetRadius: 45
   spawnRadius: 64
   boxSizeY: 30
   boxSizeX: 128

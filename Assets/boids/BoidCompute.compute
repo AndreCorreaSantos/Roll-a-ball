@@ -1,4 +1,4 @@
-//Code Based On:
+//Code Based On: https://github.com/keijiro/Boids.
 
 #pragma kernel CSMain
 
