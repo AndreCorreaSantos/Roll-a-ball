@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,17 +12,21 @@ public class PlayerController : MonoBehaviour
     private float movementY;
     public float speed;
     public TextMeshProUGUI countText;
-    private int count;
+    public int count;
     public AudioSource hitSource;
     public AudioClip eating;
 
     public Slider HealthBar;
+
+    public Slider SpeedBar;
     private float timeSinceLastEat = 0f; 
     public float eatEffectCooldown = 0.4f; 
 
     public float health = 10f;
 
-    private float eatTimer = 0;
+    public float speedBar = 0f;
+
+    private float speedBoostTimer = 0;
 
     public Transform cameraPos;
 
@@ -44,23 +49,30 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (eatTimer > 0)
+        HealthBar.value = health/10f;
+        SpeedBar.value = speedBar/10f;
+        speed = 20f;
+        if (speedBoostTimer > 0)
         {
-            eatTimer -= Time.deltaTime;
+            speedBoostTimer -= Time.deltaTime;
             speed = 40f;
-        } else
-        {
-            speed = 20f;
         }
         if (health > 0)
         {
             health -= Time.deltaTime;
-            HealthBar.value = health/10f;
-        }
-        else
+            
+        }else
         {
             SceneManager.LoadScene("MainMenu");
              
+        }
+        Debug.Log(speedBar);
+        if (speedBar > 0 && Keyboard.current.leftShiftKey.isPressed) //check if there is speed bar and it was pressed, shift
+        {
+            Debug.Log("SPEED");
+            speedBar -= Time.deltaTime;
+            SpeedBar.value = speedBar/10f;
+            speed = 50f;
         }
 
 
@@ -86,17 +98,31 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PickUp"))
+        GameObject otherObject = other.gameObject;
+        if (otherObject.CompareTag("PickUp"))
         {
-            other.gameObject.SetActive(false);
+            int edible = otherObject.GetComponentInParent<BoidController>().edible;
+            otherObject.SetActive(false);
             count += 1;
+            if (count >= 2048)
+            {
+                SceneManager.LoadScene("WinScene");
+            }
             SetCountText();
             PlayEatEffect();
-            eatTimer = 1.5f;
-            if (health < 10f)
+            speedBoostTimer = 1.5f;
+
+            if (health < 10f && edible == 2)
             {
-                transform.localScale += new Vector3(0.1f,0.1f,0.1f);
                 health += 0.5f;
+            }
+            else if (edible == 0)
+            {
+                health -= 3f;
+            }
+            else if (edible == 1 && speedBar < 10f)
+            {
+                speedBar += 1.5f;//
             }
         }
     }
@@ -106,7 +132,7 @@ public class PlayerController : MonoBehaviour
         // Check if the cooldown has elapsed
         if (timeSinceLastEat >= eatEffectCooldown)
         {
-            hitSource.PlayOneShot(eating, 0.5f);
+            hitSource.PlayOneShot(eating, 0.1f);
             timeSinceLastEat = 0f; // Reset the timer
         }
     }

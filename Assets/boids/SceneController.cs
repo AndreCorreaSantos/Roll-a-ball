@@ -40,6 +40,8 @@ public class SceneController : MonoBehaviour
 
     public float boxSizeZ = 128f;
 
+    public PlayerController playerController;
+
     struct BoidInfo
     {
         public Vector3 position;
@@ -76,7 +78,8 @@ public class SceneController : MonoBehaviour
 
         // Setting shader properties
         float timeConstant = 2f;
-        float speed = 2.5f*timeConstant;
+        float speed = 4.9f*Mathf.Pow(1.0008f,playerController.count);
+        // Debug.Log(speed);
         float time = Time.deltaTime*timeConstant;
         computeShader.SetInt("numBoids", _boids.Count);
         computeShader.SetFloat("deltaTime", time);
@@ -117,8 +120,18 @@ public class SceneController : MonoBehaviour
         Vector3 startPos = new Vector3(Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius), Random.Range(-spawnRadius, spawnRadius));
         boidInstance.transform.position = startPos;
         BoidController boidController = boidInstance.GetComponent<BoidController>();
-        boidController.edible = 1;
-        
+        //5 % chance of being unedibl
+        int rand = Random.Range(0, 100);
+        if (rand == 0) { // poisonous
+            boidController.edible = 0;
+        }
+        else if (rand == 1) { //movespeed
+            boidController.edible = 1;
+        }
+        else {
+            boidController.edible = 2; // edible
+        }
+
         _boids.Add(boidController);
 
 

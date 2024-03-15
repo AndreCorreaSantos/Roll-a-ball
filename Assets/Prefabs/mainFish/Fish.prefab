@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2600561763949470289}
-  - component: {fileID: -7661370929929176078}
+  - component: {fileID: 7139221662433735185}
   m_Layer: 6
   m_Name: Fish
   m_TagString: PickUp
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 6035703101449307270}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-7661370929929176078
+--- !u!114 &7139221662433735185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3c294c6ba1cba4e962f73483edfc45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  edible: 0
+  material: {fileID: 2100000, guid: b121715dcb1dc3d41907a35af1c1271d, type: 2}
 --- !u!1001 &5055466247327559077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,7 +135,8 @@ PrefabInstance:
       propertyPath: m_ProvidesContacts
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3454680619687658733, guid: 3730a45048a461a4f8d3ca98bf5681aa, type: 3}
     m_RemovedGameObjects:
     - {fileID: 7282225216408221654, guid: 3730a45048a461a4f8d3ca98bf5681aa, type: 3}
     - {fileID: 9061876402154864318, guid: 3730a45048a461a4f8d3ca98bf5681aa, type: 3}
