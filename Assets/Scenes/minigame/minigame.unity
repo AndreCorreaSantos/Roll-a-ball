@@ -516,6 +516,7 @@ MonoBehaviour:
   count: 0
   hitSource: {fileID: 254305377}
   eating: {fileID: 8300000, guid: 9a9091bc04796e64aab5e0536ba2f8c1, type: 3}
+  damage: {fileID: 8300000, guid: 196a646f99bc6e241aa03d235a8a028d, type: 3}
   HealthBar: {fileID: 190501451}
   SpeedBar: {fileID: 353061933}
   eatEffectCooldown: 0.1
