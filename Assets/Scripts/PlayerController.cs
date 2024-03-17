@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public int count;
     public AudioSource hitSource;
     public AudioClip eating;
-
+    public AudioClip damage;
     public Slider HealthBar;
     public Slider SpeedBar;
     private float timeSinceLastEat = 0f; 
@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (edible == 0)
             {
+                hitSource.PlayOneShot(damage, 0.5f);
                 health -= 20f;
             }
             else if (edible == 1 && speedBar < 10f)
@@ -122,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
         if (otherObject.CompareTag("Enemy"))
         {
-            Debug.Log(otherObject.name);
+            hitSource.PlayOneShot(damage, 0.5f);
             health -= 20f;
         }
     }
