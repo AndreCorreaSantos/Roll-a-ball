@@ -97,17 +97,22 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
     const float3 alignmentDirection = alignmentWeight * normalizeSafe(cellAlignment - boidSelf.forward);
     const float3 separationDirection = separationWeight * normalizeSafe(cellSeparation);
+    const float3 cohesionDirection = cohesionWeight * normalizeSafe(cellCenter - boidSelf.position);
+
+    float3 normalDirection = normalizeSafe(alignmentDirection + separationDirection + cohesionDirection);
     
     // Updated target direction logic to run away from the target within a specified radius
     float3 toTarget = targetPosition - boidSelf.position;
-    float3 targetDirection = float3(0, 0, 0);
-    if(length(toTarget) < targetRadius) {
-        targetDirection = targetWeight * -normalizeSafe(toTarget); // Run away
+    if(length(toTarget) < targetRadius) { // IF i comment these lines the flickering goes away
+        
+        float3 targetDirection = targetWeight * -normalizeSafe(toTarget); // Run away
+        normalDirection = normalizeSafe(alignmentDirection + separationDirection + cohesionDirection + targetDirection);
+        
     }
 
-    const float3 cohesionDirection = cohesionWeight * normalizeSafe(cellCenter - boidSelf.position);
+    
 
-    const float3 normalDirection = normalizeSafe(alignmentDirection + separationDirection + cohesionDirection + targetDirection);
+    
     const float3 nextDirection = normalizeSafe(boidSelf.forward + deltaTime * (normalDirection - boidSelf.forward));
 
     // Update Boid

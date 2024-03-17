@@ -1,15 +1,14 @@
 using UnityEngine;
-// using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
     public float sensitivityX = 1.0f;
     public float sensitivityY = 1.0f;
     public Transform player; // Reference to the player's transform
-    public float minYAngle = -90f; // Minimum angle for looking down
-    public float maxYAngle = 90f; // Maximum angle for looking up
+    public float minYAngle = -90f; // Min lookdown angle
+    public float maxYAngle = 90f; // Max lookup angle
 
-    float currentXRotation = 0f;
+    float xRotation = 0f;
 
     void Start()
     {
@@ -24,14 +23,12 @@ public class CameraController : MonoBehaviour
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivityY;
 
         player.Rotate(Vector3.up * mouseX);
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, minYAngle, maxYAngle);
 
 
-        currentXRotation -= mouseY;
-        currentXRotation = Mathf.Clamp(currentXRotation, minYAngle, maxYAngle);
+        Quaternion fullRotation = Quaternion.Euler(xRotation, player.eulerAngles.y, 0);
 
-
-        Quaternion rotation = Quaternion.Euler(currentXRotation, player.eulerAngles.y, 0);
-
-        player.transform.rotation = rotation;
+        player.transform.rotation = fullRotation;
     }
 }

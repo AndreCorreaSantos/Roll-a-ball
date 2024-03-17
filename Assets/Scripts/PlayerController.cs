@@ -112,14 +112,14 @@ public class PlayerController : MonoBehaviour
             }
             else if (edible == 0)
             {
-                health -= 3f;
+                health -= 20f;
             }
             else if (edible == 1 && speedBar < 10f)
             {
                 speedBar += 1.0f;//
             }
         }
-        Debug.Log(1);
+
         if (otherObject.CompareTag("Enemy"))
         {
             Debug.Log(otherObject.name);
